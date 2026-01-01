@@ -116,10 +116,18 @@ pipeline {
                 dir('deploy') {
                     echo 'Création et déploiement des conteneurs Docker...'
                     script {
-                        bat 'docker-compose down --remove-orphans || exit 0'
+                        echo 'Arrêt et suppression des conteneurs existants...'
                         bat '''
-                            docker rm -f consul-container mysql-container1 phpmyadmin-container eureka-server gateway-service client-service voiture-service 2>nul || exit 0
+                            docker-compose down --remove-orphans 2>nul || echo "No compose containers to remove"
+                            docker rm -f consul-container 2>nul || echo "consul-container not found"
+                            docker rm -f mysql-container1 2>nul || echo "mysql-container1 not found"
+                            docker rm -f phpmyadmin-container 2>nul || echo "phpmyadmin-container not found"
+                            docker rm -f eureka-server 2>nul || echo "eureka-server not found"
+                            docker rm -f gateway-service 2>nul || echo "gateway-service not found"
+                            docker rm -f client-service 2>nul || echo "client-service not found"
+                            docker rm -f voiture-service 2>nul || echo "voiture-service not found"
                         '''
+                        echo 'Démarrage des conteneurs...'
                         bat 'docker-compose up -d --build'
                     }
                 }
