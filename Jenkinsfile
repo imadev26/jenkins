@@ -116,6 +116,7 @@ pipeline {
                 dir('deploy') {
                     echo 'Création et déploiement des conteneurs Docker...'
                     script {
+                        bat 'docker-compose down || exit 0'
                         bat 'docker-compose up -d --build'
                     }
                 }
