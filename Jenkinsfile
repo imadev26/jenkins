@@ -116,7 +116,10 @@ pipeline {
                 dir('deploy') {
                     echo 'Création et déploiement des conteneurs Docker...'
                     script {
-                        bat 'docker-compose down || exit 0'
+                        bat 'docker-compose down --remove-orphans || exit 0'
+                        bat '''
+                            docker rm -f consul-container mysql-container1 phpmyadmin-container eureka-server gateway-service client-service voiture-service 2>nul || exit 0
+                        '''
                         bat 'docker-compose up -d --build'
                     }
                 }
